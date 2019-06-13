@@ -1,0 +1,238 @@
+
+
+Es是如何查询的？
+"query": {
+    "match": {"project_id":73}
+  }
+如果是 查数字 是准确查询
+如果是 文字 是全文搜索
+rock climbing
+会把包括 rock  和 climbing的 都查出来
+默认按照相关性得分排序
+
+"query" : {
+        "match_phrase" : {
+            "about" : "rock climbing"
+        }
+    }
+短语查询  会查询包括 rock climbing的内容
+
+
+"highlight": {
+        "fields" : {
+            "about" : {}
+        }
+    }
+高亮在kibana中 无效
+
+
+精确查找
+filters 请尽可能多的使用过滤式查询
+{
+    "query" : {
+        "bool": {
+            "must": {
+                "match" : {
+                    "last_name" : "smith"
+                }
+            },
+            "filter": {
+                "range" : {
+                    "age" : { "gt" : 30 }
+                }
+            }
+        }
+    }
+}
+简单 总结 查询时 一般的组合 是
+	bool filter ==
+		must =
+		must not <>
+		shold or
+	filter不会进行打分评估  _score 精确查找 所以会快
+
+- [x] ES"_index" "_type"  "_id" 代表什么
+id是唯一数据 标识
+index索引  一级分类
+type 分类  二级分类
+
+
+Es是如何批量查询的
+GET /_mget
+{
+  "docs":[
+  {
+  "_id":"AWddgMQwY2k3wenPEZc_",
+  "_index": "uegnaudit_post_2018.11.29",
+  "_type": "post"
+  }
+  ]
+}
+_id 和 _index 是必填的
+
+es5.x 到es6.x
+1 string类型去除
+（1）string
+string类型在ElasticSearch 旧版本中使用较多，从ElasticSearch 5.x开始不再支持string，由text和keyword类型替代。
+（2）text
+当一个字段是要被全文搜索的，比如Email内容、产品描述，应该使用text类型。设置text类型以后，字段内容会被分析，在生成倒排索引以前，字符串会被分析器分成一个一个词项。text类型的字段不用于排序，很少用于聚合。
+（3）keyword
+keyword类型适用于索引结构化的字段，比如email地址、主机名、状态码和标签。如果字段需要进行过滤(比如查找已发布博客中status属性为published的文章)、排序、聚合。keyword类型的字段只能通过精确值搜索到。
+
+2 index类型为bool
+
+解决:  "index": "not_analyzed" 替换为 "index": true | false
+url: /test1
+method: PUT
+params : {
+  "mappings": {
+    "type1": {
+      "properties": {
+        "user": {
+          "type": "text",
+          "index": false
+        }
+      }
+    }
+  }
+}
+3 自定义分析器参数错误
+# POST
+url: /_analyze/
+method: POST
+params : {
+  "tokenizer": "keyword",
+  "token_filters": [
+    "lowercase"
+  ],
+  "char_filters": [
+    "html_strip"
+  ],
+  "text": "this is a <b>test</b>"
+}
+
+ 解决:  修改params的key名称
+ # POST
+ url: /_analyze/
+ method: POST
+ params : {
+   "tokenizer": "keyword",
+   "filter": [
+     "lowercase"
+   ],
+   "char_filter": [
+     "html_strip"
+   ],
+   "text": "this is a <b>test</b>"
+ }
+
+4 按_all字段不能查询到数据
+# POST
+url: /meta_test/_search/
+method: POST
+params : {
+  "query": {
+    "match": {
+      "_all": "yan shaowen"
+    }
+  }
+}
+
+返回查询结果为空数组
+{
+    "took": 264,
+    "timed_out": false,
+    "_shards": {
+        "total": 1,
+        "successful": 1,
+        "skipped": 0,
+        "failed": 0
+    },
+    "hits": {
+        "total": 0,
+        "max_score": null,
+        "hits": []
+    }
+}
+
+现有的数据为
+{
+    "_index": "meta_test",
+    "_type": "_doc",
+    "_id": "e6uod2cBb7ER3WX6wipL",
+    "_version": 1,
+    "_score": 1,
+    "_source": {
+        "first_name": "yan",
+        "last_name": "shaowen",
+        "date_of_birth": "1993-03-14"
+    }
+}
+
+解决: 6.x版本_all为禁用 并且不能启用,测试启用时报错如下
+# POST
+url: /meta_test/_doc/_mapping/
+method: PUT
+params : {
+  "_doc": {
+    "_all": {
+      "enabled": true
+    }
+  }
+}
+
+{
+    "error": {
+        "root_cause": [{
+            "type": "illegal_argument_exception",
+            "reason": "Enabling [_all] is disabled in 6.0. As a replacement, you can use [copy_to] on mapping fields to create your own catch all field."
+        }],
+        "type": "illegal_argument_exception",
+        "reason": "Enabling [_all] is disabled in 6.0. As a replacement, you can use [copy_to] on mapping fields to create your own catch all field."
+    },
+    "status": 400
+}
+
+使用query_string查询
+{
+  "query": {
+    "query_string": {
+      "query": "yan shaowen"
+    }
+  }
+}
+
+
+mapping parameters中的index只能接收一个bool值，true或者false
+
+
+整理升级迁移步骤
+1.其中Elasticsearch，Kibana均为由5.5.2 → 6.0.0 ；
+而Logstash即由5.5.2 → 6.0.1；
+Filebeat 5.5.2 → 5.6.5 → 6.0.1
+搭建 新的集群 相关的套件升级 硬盘固态  百度云监控
+
+2.创建库 表结构
+测试查询修改 接口
+测试百度云监控的数据是否准确
+
+3.创建新的 审核项目
+ 修改代码
+    指定项目id 在es数据添加和修改的时候 同步新的es
+    测试新es的 写入 修改是否和 老es数据一致
+4.测试现有的业务中 流量小的 不需要审核 积压历史贴的策略项目
+    指定项目id 在es数据添加和修改的时候 同步新的es
+    测试新es的 写入 修改是否和 老es数据一致
+
+     同步准备老数据的 导出 以备新的es数据导入
+5.逐步 添加新项目
+    测试 同步老数据
+
+6.新审核 全量接入项目
+7.去除老 es的数据维护 代码中 去除原来es的操作 只剩新的es操作
+
+
+
+
+
+
