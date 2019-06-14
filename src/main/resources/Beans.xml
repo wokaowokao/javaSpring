@@ -4,8 +4,13 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
     http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
-    <bean id="helloWorld" class="HelloWorld">
+   <!-- <bean id="helloWorld" class="HelloWorld">
         <property name="message" value="Hello World!"/>
+    </bean>-->
+    <bean id="car" class="lifeCycle.Car" init-method="initCar" destroy-method="destroyCar">
+        <!--<property name="color" value="red"/>-->
     </bean>
-
+    <!-- 配置bean的后置处理器,不需要id，IoC容器自动识别是一个BeanPostProcessor -->
+    <bean class="lifeCycle.MyBeanPostProcessor"></bean>
+    <bean class="lifeCycle.MyInsBeanPostProcessor"></bean>
 </beans>
