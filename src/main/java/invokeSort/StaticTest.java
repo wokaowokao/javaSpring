@@ -1,3 +1,5 @@
+package invokeSort;
+
 public class StaticTest {
     public static int k = 0;
     public static StaticTest t1 = new StaticTest("t1");

@@ -1,3 +1,5 @@
+package invokeSort;
+
 public class Test {
 
     static Test test = new Test();

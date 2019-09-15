@@ -1,3 +1,7 @@
+package reflect;
+
+import invokeSort.HelloWorld;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -6,7 +10,7 @@ public class JDKMain {
     public static void main(String[] args) throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
         //利用 反射创建类 以及调用类的方法
         ClassLoader loader = Thread.currentThread().getContextClassLoader();
-        Class clazz = loader.loadClass("HelloWorld");
+        Class clazz = loader.loadClass("invokeSort.HelloWorld");
 
         Constructor declaredConstructor = clazz.getDeclaredConstructor((Class[]) null);
         //实例化类 会初始化类会调用 static代码块儿
