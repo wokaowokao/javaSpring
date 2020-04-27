@@ -12,7 +12,6 @@ public abstract class AbsoluteClass {
         this.name = name;
         return this;
     }
-
     public int getAge() {
         return age;
     }

@@ -3,14 +3,14 @@ package effctive;
 public class ForClone  implements Cloneable{
     private String name;
     private int age;
-    private Foo foo;
+    private Woo woo;
 
-    public Foo getFoo() {
-        return foo;
+    public Woo getWoo() {
+        return woo;
     }
 
-    public ForClone setFoo(Foo foo) {
-        this.foo = foo;
+    public ForClone setWoo(Woo woo) {
+        this.woo = woo;
         return this;
     }
 

@@ -10,6 +10,7 @@ public class BeanPost implements BeanPostProcessor {
     //实现所有的bean的 切面
     @Override
     public Object postProcessBeforeInitialization(Object bean, String s) throws BeansException {
+
         List<Field> fields = Lists.newArrayList(bean.getClass().getDeclaredFields());
         fields.stream().forEach(i-> {
             if(i.isAnnotationPresent(ZYW.class)){

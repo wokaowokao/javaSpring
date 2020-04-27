@@ -6,7 +6,9 @@ public class Child extends Base {
     void getAge() {
         System.out.println("child age: 1");
         super.getAge();
+
     }
+
 
     @Override
     void getName() {
