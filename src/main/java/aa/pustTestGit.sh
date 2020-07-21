@@ -9,3 +9,4 @@ echo '开始切换分支。。'
 git checkout -
 sleep 1
 echo '执行完毕'
+
