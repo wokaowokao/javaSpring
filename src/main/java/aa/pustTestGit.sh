@@ -10,3 +10,4 @@ git checkout -
 sleep 1
 echo '执行完毕'
 
+aaa
