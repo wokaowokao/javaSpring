@@ -12,6 +12,7 @@ public class Test {
          *      *                   OP      11       11       11      10        01
          *      *          TERMINAL_OP      00       00       10      00        01
          *      * UPSTREAM_TERMINAL_OP      00       00       10      00        00
+
          */
 
         //StreamOpFlag.DISTINCT
