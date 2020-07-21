@@ -1,5 +1,3 @@
-
-
 echo "开始执行切换分支。。执行完之后等待2s"
 git checkout -
 sleep 5
