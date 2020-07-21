@@ -1,8 +1,11 @@
 package lombok;
 
 @Data
-@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class BeanA {
+
     private String aa;
+
     private Integer bb;
 }

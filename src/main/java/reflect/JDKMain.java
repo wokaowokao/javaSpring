@@ -19,7 +19,6 @@ public class JDKMain {
         //间接调用 不会执行static 调用父类的静态 数组调用 静态常量
         HelloWorld helloWorld = (HelloWorld) declaredConstructor.newInstance();
 
-
         Method setMessage = clazz.getMethod("setMessage", String.class);
 
         //getMethod 只获取public修饰方法

@@ -12,6 +12,7 @@ import org.springframework.beans.factory.config.BeanPostProcessor;
  *
  * @author LinJie
  */
+
 public class MyBeanPostProcessor implements BeanPostProcessor {
 
     //对初始化之后的Bean进行处理
